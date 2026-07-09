@@ -1,2 +1,4 @@
 # Ignore all ZIP files
 *.zip
+
+__pycache__

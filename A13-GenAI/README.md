@@ -1,56 +1,44 @@
-task1.py will be having the Task 1 which is used for
+A13 - GenAI
 
-Loading CSV
-Basic preprocessing
-Dataset information
+Files
 
-Task 2 will
-Load JSON
-Convert to DataFrame
+- task1.py, task2.py, task3.py, task4.py
+- products.json, superstore_final_dataset.csv, tmdb_movies.csv
 
-Task 3 will
-SQLite Database
-Insert records
-Read using SQL query
+What each file does
 
-task2.py will be doing the task4 with 
+- task1.py loads the Superstore CSV, loads JSON data into a DataFrame, and demonstrates SQLite read/write with a small employee table.
+- task2.py pulls popular movies from TMDB using an environment variable, then performs understanding and cleaning steps on the Superstore dataset.
+- task3.py prepares features with one-hot encoding and creates univariate plots for sales and category distribution.
+- task4.py creates bivariate plots and prints the final insights with numerical evidence.
 
-TMDB API
-Save response to tmdb_movies.csv
+Dataset and API sources
+- Kaggle Superstore dataset: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
+- TMDB API endpoint used: https://api.themoviedb.org/3/movie/popular
 
-Task 5 will 
-Understand the dataset
+Setup:
 
-Task 6 will 
-Cleaning the data
+Install the required libraries:
 
-task3.py file will be doing the Task 7 which is
+pip install pandas numpy matplotlib seaborn requests
 
-Encoding
-Features & Target
+Set your TMDB key before running task2.py.
 
-and Task 8 will
-Univariate EDA
-task4.py
+PowerShell:
+$env:TMDB_API_KEY = "your_tmdb_key_here"
 
-and Task 9 will
-Bivariate EDA
+How to run
 
-finally Task 10 will do the Insights
+Run the files in order:
 
-What I did is:
-- Loaded data from CSV, JSON, SQLite and TMDB API.
-- Cleaned and prepared the dataset
-- Converted categorical columns into numerical format.
-- Performed Exploratory Data Analysis using Matplotlib and Seaborn
-- Observed patterns and relationships in the dataset
-
-Run the files one by one:
 python task1.py
 python task2.py
 python task3.py
 python task4.py
 
-before that import all the libraries using this command
+The plotting scripts save figures into the eda_outputs folder so the analysis can be reviewed even in a non-interactive environment.
 
-"pip install pandas numpy matplotlib seaborn requests"
+What I Learnt:
+
+This assignment helped me to practice reading data from CSV, JSON, SQLite, and an API, then cleaning and analyzing it with pandas. I also learned why environment variables are important for API keys, and I now understand how to turn raw dataset observations into specific, measurable EDA insights instead of generic comments
+

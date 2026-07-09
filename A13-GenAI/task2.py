@@ -1,71 +1,131 @@
+from pathlib import Path
+import os
+
 import pandas as pd
 import requests
-# Task 4 : Load Data from TMDB API
 
-api_key = "fea516c366ad73f57dbc951bef5513ac"
-url = f"https://api.themoviedb.org/3/movie/popular?api_key={api_key}"
 
-response = requests.get(url)
-movies = response.json()["results"]
-movie_list = []
+BASE_DIR = Path(__file__).resolve().parent
+CSV_PATH = BASE_DIR / "superstore_final_dataset.csv"
+TMDB_OUTPUT_PATH = BASE_DIR / "tmdb_movies.csv"
 
-for movie in movies:
-    movie_list.append({"Title": movie["title"],"Release Date": movie["release_date"],
-        "Rating": movie["vote_average"],"Popularity": movie["popularity"],"Language": movie["original_language"]})
 
-movies_df = pd.DataFrame(movie_list)
-movies_df.to_csv("tmdb_movies.csv", index = False)
+def load_tmdb_movies():
+    # Step 1: use an environment variable instead of a hardcoded API key.
+    api_key = os.getenv("TMDB_API_KEY")
+    if not api_key:
+        print("TMDB_API_KEY is not set, so the API download is being skipped.")
+        return None
 
-print("TMDB Movies")
-print(movies_df.head())
+    url = "https://api.themoviedb.org/3/movie/popular"
+    try:
+        response = requests.get(
+            url,
+            params={"api_key": api_key, "language": "en-US", "page": 1},
+            timeout=30,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        movies = payload.get("results", [])
+    except requests.RequestException as exc:
+        print(f"TMDB request failed: {exc}")
+        return None
+    except ValueError as exc:
+        print(f"Could not decode TMDB response as JSON: {exc}")
+        return None
 
-# Task 5 : Understanding the Data
-df = pd.read_csv("superstore_final_dataset.csv", encoding = "unicode_escape")
-print("\nShape :", df.shape)
+    movie_list = []
+    for movie in movies:
+        movie_list.append(
+            {
+                "Title": movie.get("title"),
+                "Release Date": movie.get("release_date"),
+                "Rating": movie.get("vote_average"),
+                "Popularity": movie.get("popularity"),
+                "Language": movie.get("original_language"),
+            }
+        )
 
-print("\nData Types")
-print(df.dtypes)
+    movies_df = pd.DataFrame(movie_list)
+    try:
+        movies_df.to_csv(TMDB_OUTPUT_PATH, index=False)
+        print(f"Saved TMDB data to {TMDB_OUTPUT_PATH}")
+    except OSError as exc:
+        print(f"Could not write tmdb_movies.csv: {exc}")
 
-print("\nNumerical Columns")
-print(df.select_dtypes(include = ["int64", "float64"]).columns)
+    print("TMDB Movies:")
+    print(movies_df.head())
+    return movies_df
 
-print("\nCategorical Columns")
-print(df.select_dtypes(include = ["object"]).columns)
 
-print("\nMissing Values")
-print(df.isnull().sum())
+def load_superstore_data():
+    # Step 2: inspect the raw dataset before cleaning.
+    try:
+        df = pd.read_csv(CSV_PATH, encoding="unicode_escape")
+    except FileNotFoundError:
+        print(f"CSV file not found: {CSV_PATH}")
+        return None
+    except Exception as exc:
+        print(f"Could not read the CSV file: {exc}")
+        return None
 
-print("\nSummary")
-print(df.describe())
+    print("\nShape:", df.shape)
+    print("\nData Types")
+    print(df.dtypes)
+    print("\nNumerical Columns")
+    print(list(df.select_dtypes(include=["number"]).columns))
+    print("\nCategorical Columns")
+    print(list(df.select_dtypes(exclude=["number"]).columns))
+    print("\nMissing Values")
+    print(df.isnull().sum())
+    print("\nSummary")
+    print(df.describe())
+    print("\nUnique Values")
+    print(df.nunique())
+    return df
 
-print("\nUnique Values")
-print(df.nunique())
 
-# Task 6 : Data Cleaning
+def clean_superstore_data(df):
+    # Step 3: basic cleaning with simple, explainable rules.
+    print("\nTask 6: Data Cleaning")
+    cleaned_df = df.copy()
 
-# Fill missing values
-number_columns = df.select_dtypes(include = ["int64", "float64"]).columns
+    numeric_columns = cleaned_df.select_dtypes(include=["number"]).columns
+    text_columns = cleaned_df.select_dtypes(exclude=["number"]).columns
 
-for column in number_columns:
-    df[column] = df[column].fillna(df[column].mean())
+    for column in numeric_columns:
+        if cleaned_df[column].isna().any():
+            cleaned_df[column] = cleaned_df[column].fillna(cleaned_df[column].mean())
 
-text_columns = df.select_dtypes(include = ["object"]).columns
+    for column in text_columns:
+        if cleaned_df[column].isna().any():
+            cleaned_df[column] = cleaned_df[column].fillna("Unknown")
 
-for column in text_columns:
-    df[column] = df[column].fillna("Unknown")
+    before_duplicates = len(cleaned_df)
+    cleaned_df = cleaned_df.drop_duplicates()
+    removed_duplicates = before_duplicates - len(cleaned_df)
 
-# Remove duplicate rows
+    cleaned_df.columns = cleaned_df.columns.str.lower().str.replace(" ", "_", regex=False)
 
-df = df.drop_duplicates()
-df.columns = df.columns.str.lower()
-df.columns = df.columns.str.replace(" ", "_")
+    if "order_date" in cleaned_df.columns:
+        cleaned_df["order_date"] = pd.to_datetime(cleaned_df["order_date"], errors="coerce")
 
-# Convert order_date to datetime
+    print(f"Removed duplicate rows: {removed_duplicates}")
+    print("\nCleaned Dataset")
+    print(cleaned_df.head())
+    print("\nUpdated Column Names")
+    print(list(cleaned_df.columns))
+    print("\nMissing Values After Cleaning")
+    print(cleaned_df.isnull().sum())
+    return cleaned_df
 
-df["order_date"] = pd.to_datetime(df["order_date"])
 
-print("\nCleaned Dataset")
-print(df.head())
+def main():
+    load_tmdb_movies()
+    df = load_superstore_data()
+    if df is not None:
+        clean_superstore_data(df)
 
-print("\nUpdated Column Names")
-print(df.columns)
+
+if __name__ == "__main__":
+    main()
