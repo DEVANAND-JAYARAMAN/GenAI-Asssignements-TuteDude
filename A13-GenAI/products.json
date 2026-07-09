@@ -1,0 +1,22 @@
+[
+    {
+        "Product": "Laptop",
+        "Price": 65656,
+        "Category": "Electronics"
+    },
+    {
+        "Product": "Keyboard",
+        "Price": 1555,
+        "Category": "Accessories"
+    },
+    {
+        "Product": "Mouse",
+        "Price": 579,
+        "Category": "Accessories"
+    },
+    {
+        "Product": "Monitor",
+        "Price": 25639,
+        "Category": "Electronics"
+    }
+]
