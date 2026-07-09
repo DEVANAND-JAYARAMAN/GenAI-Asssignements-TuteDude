@@ -2,7 +2,7 @@ A13 - GenAI
 
 Files
 
-- task1.py, task2.py, task3.py, task4.py
+- task1.py, task2.py, task3.py, task4.py, A13_GenAI_Notebook.ipynb
 - products.json, superstore_final_dataset.csv, tmdb_movies.csv
 
 What each file does

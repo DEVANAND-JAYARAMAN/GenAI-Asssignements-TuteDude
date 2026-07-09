@@ -46,6 +46,7 @@ def prepare_features(df):
 		print("The sales column is missing, so feature preparation stops here.")
 		return None, None
 
+	print("I am using sales as the target because it is the numeric outcome the later analysis compares against the other fields.")
 	target = encoded_df["sales"]
 	features = encoded_df.drop(columns=["sales"])
 
@@ -79,7 +80,7 @@ def run_univariate_analysis(df):
 	save_plot("task3_sales_kde.png")
 
 	plt.figure(figsize=(8, 5))
-	sns.countplot(data=df, x="category", order=df["category"].value_counts().index, palette="deep")
+	sns.countplot(data=df, x="category", order=df["category"].value_counts().index, color="#457b9d")
 	plt.title("Category Count")
 	plt.xlabel("Category")
 	plt.ylabel("Count")

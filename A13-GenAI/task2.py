@@ -11,10 +11,21 @@ TMDB_OUTPUT_PATH = BASE_DIR / "tmdb_movies.csv"
 
 
 def load_tmdb_movies():
-    # Step 1: use an environment variable instead of a hardcoded API key.
+    # Step 1: use the existing TMDB export if it is already in the folder.
+    if TMDB_OUTPUT_PATH.exists():
+        try:
+            movies_df = pd.read_csv(TMDB_OUTPUT_PATH)
+            print(f"Loaded TMDB data from {TMDB_OUTPUT_PATH}")
+            print("TMDB Movies:")
+            print(movies_df.head())
+            return movies_df
+        except Exception as exc:
+            print(f"Could not read the existing TMDB CSV: {exc}")
+
+    # If the CSV is not present, refresh it from the API when a key is available.
     api_key = os.getenv("TMDB_API_KEY")
     if not api_key:
-        print("TMDB_API_KEY is not set, so the API download is being skipped.")
+        print("TMDB_API_KEY is not set, so TMDB data cannot be refreshed right now.")
         return None
 
     url = "https://api.themoviedb.org/3/movie/popular"
