@@ -12,7 +12,7 @@ Tools & Libraries Used
 - Pandas
 - Regular Expressions (re)
 - NLTK
-- String'
+- String
 
 
 Output
