@@ -38,4 +38,10 @@ Files Used:
 2. Run the application:
    streamlit run app.py
 
+GitHub Repository:
+https://github.com/DEVANAND-JAYARAMAN/GenAI-Asssignements-TuteDude
+
+Render URL:
+https://genai-asssignements-tutedude.onrender.com/
+
 This project demonstrates an end-to-end content-based recommendation system, from data preprocessing and feature extraction to deployment using Streamlit and Render.
