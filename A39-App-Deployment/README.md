@@ -45,3 +45,9 @@ The application logic and features remain the same:
 - Explain Code
 - Debug Code
 - Optimize Code
+
+GitHub repo link: https://github.com/DEVANAND-JAYARAMAN/GenAI-Asssignements-TuteDude/
+
+screenshot is attached
+
+I attempted to complete the Hugging Face Spaces deployment. However, on my account the Gradio and Docker SDKs require a PRO subscription, and only Static Spaces are available for free
