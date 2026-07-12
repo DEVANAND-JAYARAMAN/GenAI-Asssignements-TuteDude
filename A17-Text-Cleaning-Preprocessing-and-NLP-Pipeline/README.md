@@ -1,36 +1,55 @@
-Kaggle Dataset Link:
+# Assignment 17 – Text Cleaning, Preprocessing & NLP Pipeline
 
-https://www.kaggle.com/code/ishansoni/sms-spam-collection-dataset
-https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset
+## Dataset
 
-SMS Spam Collection Dataset
-spam dataset
+Source: Custom text dataset created for educational purposes.
 
-Tools & Libraries Used
+The dataset contains 25 text samples featuring various forms of noisy and unstructured text, including:
 
-- Python
-- Pandas
-- Regular Expressions (re)
-- NLTK
-- String
+* Uppercase and lowercase text
+* Punctuation marks
+* Numbers
+* URLs
+* Email addresses
+* HTML tags
+* Emojis
+* Extra whitespace
+* Slang words
+* Repeated characters
 
-
-Output
-
-The final dataset contains several processed columns, including:
-
-- clean_text_basic
-- lean_text_advanced
-- text_no_stopwords
-- normalized_text
-- final_clean_text
-
-The processed dataset was also exported as:
-
-processed_sms_dataset.csv
-
-In this assignment, a complete NLP preprocessing pipeline was implemented using Python and NLTK. Different text cleaning techniques, tokenization, stemming, lemmatization, and stopword removal were performed to convert raw text into clean, structured, and model-ready text. This preprocessing pipeline forms an important foundation for future NLP and Generative AI applications
+These samples simulate real-world text collected from social media, websites, emails, and user-generated content.
 
 
+## Technologies Used
 
+* Python
+* Pandas
+* NLTK (Natural Language Toolkit)
+* Regular Expressions (`re`)
 
+## NLP Pipeline
+
+The preprocessing pipeline follows these stages:
+
+**Raw Text**
+→ Lowercase Conversion
+→ Remove URLs
+→ Remove Emails
+→ Remove HTML Tags
+→ Remove Emojis
+→ Remove Numbers
+→ Remove Punctuation
+→ Remove Extra Spaces
+→ Slang Replacement
+→ Normalize Repeated Characters
+→ Tokenization
+→ Stopword Removal
+→ Stemming
+→ Lemmatization
+→ Final Clean Text*
+
+## Conclusion
+
+This assignment demonstrates the importance of text preprocessing in Natural Language Processing. By applying multiple cleaning and normalization techniques, raw textual data was successfully transformed into structured and meaningful text. The final output is well-prepared for NLP applications such as sentiment analysis, document classification, information retrieval, and machine learning models
+
+install the requirements.txt and then proceed to the next

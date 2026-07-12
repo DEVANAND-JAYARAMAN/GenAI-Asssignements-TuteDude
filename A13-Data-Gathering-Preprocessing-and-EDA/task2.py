@@ -1,142 +1,103 @@
-from pathlib import Path
+# task2.py
+
 import os
-
-import pandas as pd
 import requests
+import pandas as pd
+from dotenv import load_dotenv
 
+# Task 4 - TMDB API Mini Project
 
-BASE_DIR = Path(__file__).resolve().parent
-CSV_PATH = BASE_DIR / "superstore_final_dataset.csv"
-TMDB_OUTPUT_PATH = BASE_DIR / "tmdb_movies.csv"
+print("Task 4 - TMDB API\n")
+load_dotenv()
+api_key = os.getenv("TMDB_API_KEY")
+url = "https://api.themoviedb.org/3/movie/popular"
+params = {"api_key": api_key,"language": "en-US","page": 1}
 
+response = requests.get(url, params=params)
+data = response.json()
+movies = []
+for movie in data["results"]:
+    movies.append({
+        "Title": movie["title"],
+        "Release Date": movie["release_date"],
+        "Rating": movie["vote_average"],
+        "Popularity": movie["popularity"],
+        "Language": movie["original_language"]})
 
-def load_tmdb_movies():
-    # Step 1: use the existing TMDB export if it is already in the folder.
-    if TMDB_OUTPUT_PATH.exists():
-        try:
-            movies_df = pd.read_csv(TMDB_OUTPUT_PATH)
-            print(f"Loaded TMDB data from {TMDB_OUTPUT_PATH}")
-            print("TMDB Movies:")
-            print(movies_df.head())
-            return movies_df
-        except Exception as exc:
-            print(f"Could not read the existing TMDB CSV: {exc}")
+movies_df = pd.DataFrame(movies)
 
-    # If the CSV is not present, refresh it from the API when a key is available.
-    api_key = os.getenv("TMDB_API_KEY")
-    if not api_key:
-        print("TMDB_API_KEY is not set, so TMDB data cannot be refreshed right now.")
-        return None
+print("\nPopular Movies\n")
+print(movies_df.head())
 
-    url = "https://api.themoviedb.org/3/movie/popular"
-    try:
-        response = requests.get(
-            url,
-            params={"api_key": api_key, "language": "en-US", "page": 1},
-            timeout=30,
-        )
-        response.raise_for_status()
-        payload = response.json()
-        movies = payload.get("results", [])
-    except requests.RequestException as exc:
-        print(f"TMDB request failed: {exc}")
-        return None
-    except ValueError as exc:
-        print(f"Could not decode TMDB response as JSON: {exc}")
-        return None
+movies_df.to_csv("tmdb_movies.csv", index=False)
 
-    movie_list = []
-    for movie in movies:
-        movie_list.append(
-            {
-                "Title": movie.get("title"),
-                "Release Date": movie.get("release_date"),
-                "Rating": movie.get("vote_average"),
-                "Popularity": movie.get("popularity"),
-                "Language": movie.get("original_language"),
-            }
-        )
+print("\ntmdb_movies.csv created successfully.")
 
-    movies_df = pd.DataFrame(movie_list)
-    try:
-        movies_df.to_csv(TMDB_OUTPUT_PATH, index=False)
-        print(f"Saved TMDB data to {TMDB_OUTPUT_PATH}")
-    except OSError as exc:
-        print(f"Could not write tmdb_movies.csv: {exc}")
+# Task 5 - Understanding the Data
+print("\n==============================")
+print("Task 5 - Understanding the Data")
+print("==============================\n")
 
-    print("TMDB Movies:")
-    print(movies_df.head())
-    return movies_df
+df = pd.read_csv("superstore_final_dataset.csv", encoding="unicode_escape")
 
+print("Dataset Shape:")
+print(df.shape)
 
-def load_superstore_data():
-    # Step 2: inspect the raw dataset before cleaning.
-    try:
-        df = pd.read_csv(CSV_PATH, encoding="unicode_escape")
-    except FileNotFoundError:
-        print(f"CSV file not found: {CSV_PATH}")
-        return None
-    except Exception as exc:
-        print(f"Could not read the CSV file: {exc}")
-        return None
+print("\nData Types")
+print(df.dtypes)
 
-    print("\nShape:", df.shape)
-    print("\nData Types")
-    print(df.dtypes)
-    print("\nNumerical Columns")
-    print(list(df.select_dtypes(include=["number"]).columns))
-    print("\nCategorical Columns")
-    print(list(df.select_dtypes(exclude=["number"]).columns))
-    print("\nMissing Values")
-    print(df.isnull().sum())
-    print("\nSummary")
-    print(df.describe())
-    print("\nUnique Values")
-    print(df.nunique())
-    return df
+print("\nNumerical Columns")
+print(df.select_dtypes(include="number").columns.tolist())
 
+print("\nCategorical Columns")
+print(df.select_dtypes(exclude="number").columns.tolist())
 
-def clean_superstore_data(df):
-    # Step 3: basic cleaning with simple, explainable rules.
-    print("\nTask 6: Data Cleaning")
-    cleaned_df = df.copy()
+print("\nMissing Values")
+print(df.isnull().sum())
 
-    numeric_columns = cleaned_df.select_dtypes(include=["number"]).columns
-    text_columns = cleaned_df.select_dtypes(exclude=["number"]).columns
+print("\nSummary Statistics")
+print(df.describe(include="all"))
 
-    for column in numeric_columns:
-        if cleaned_df[column].isna().any():
-            cleaned_df[column] = cleaned_df[column].fillna(cleaned_df[column].mean())
+print("\nDuplicate Rows:", df.duplicated().sum())
 
-    for column in text_columns:
-        if cleaned_df[column].isna().any():
-            cleaned_df[column] = cleaned_df[column].fillna("Unknown")
+# Task 6 - Data Cleaning
+print("\n==============================")
+print("Task 6 - Data Cleaning")
+print("==============================\n")
 
-    before_duplicates = len(cleaned_df)
-    cleaned_df = cleaned_df.drop_duplicates()
-    removed_duplicates = before_duplicates - len(cleaned_df)
+# Fill missing numerical values
+num_cols = df.select_dtypes(include="number").columns
 
-    cleaned_df.columns = cleaned_df.columns.str.lower().str.replace(" ", "_", regex=False)
+for col in num_cols:
+    df[col] = df[col].fillna(df[col].mean())
 
-    if "order_date" in cleaned_df.columns:
-        cleaned_df["order_date"] = pd.to_datetime(cleaned_df["order_date"], errors="coerce")
+# Fill missing categorical values
+cat_cols = df.select_dtypes(exclude="number").columns
 
-    print(f"Removed duplicate rows: {removed_duplicates}")
-    print("\nCleaned Dataset")
-    print(cleaned_df.head())
-    print("\nUpdated Column Names")
-    print(list(cleaned_df.columns))
-    print("\nMissing Values After Cleaning")
-    print(cleaned_df.isnull().sum())
-    return cleaned_df
+for col in cat_cols:
+    df[col] = df[col].fillna("Unknown")
 
+# Remove duplicates
+df = df.drop_duplicates()
 
-def main():
-    load_tmdb_movies()
-    df = load_superstore_data()
-    if df is not None:
-        clean_superstore_data(df)
+# Rename columns
+df.columns = (df.columns.str.lower().str.replace(" ", "_"))
 
+# Fix date columns
+if "order_date" in df.columns:
+    df["order_date"] = pd.to_datetime(df["order_date"])
 
-if __name__ == "__main__":
-    main()
+if "ship_date" in df.columns:
+    df["ship_date"] = pd.to_datetime(df["ship_date"])
+
+print("Cleaning completed.\n")
+print(df.head())
+print("\nColumn Names")
+print(df.columns)
+
+print("\nMissing Values After Cleaning")
+print(df.isnull().sum())
+
+print("\nFinal Shape")
+print(df.shape)
+print("\nTask 4, Task 5 and Task 6 completed successfully.")

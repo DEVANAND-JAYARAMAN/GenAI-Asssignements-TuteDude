@@ -1,53 +1,105 @@
-# Assignment 38 - CodeLlama with Ollama
+# Assignment 39 - GenAI Application Deployment
 
-Features
+This assignment demonstrates the deployment of my CodeLlama Coding Assistant on cloud platforms.
+
+## Project Features
 
 - Generate Python code
-- Explain existing code
-- Debug code
-- Optimize code
+- Explain Python code
+- Debug Python code
+- Optimize Python code
 
-Technologies
+## Technologies Used
 
-- Ollama
-- CodeLlama
-- LangChain
+- Python
 - Streamlit
+- Ollama (Local Development)
+- Groq API (Cloud Deployment)
+- LangChain
+- CodeLlama
+- Llama 3.3 70B Versatile
 
-Run
+---
 
-Install dependencies
+## GitHub Repository
 
+Repository Link:
+
+https://github.com/DEVANAND-JAYARAMAN/GenAI-Asssignements-TuteDude/
+
+---
+
+## Streamlit Community Cloud Deployment
+
+Live Application:
+
+https://codellama-with-ollama.streamlit.app/
+
+### Deployment Steps
+
+1. Created a GitHub repository and pushed the project.
+2. Logged into Streamlit Community Cloud.
+3. Connected the GitHub repository.
+4. Selected `app.py` as the main application.
+5. Added the `GROQ_API_KEY` inside Streamlit Secrets.
+6. Deployed the application successfully.
+7. Tested all the features after deployment.
+
+---
+
+## Hugging Face Spaces
+
+Space Link:
+
+https://huggingface.co/spaces/devanand170904/CodeLlama-Ollama-Assistant
+
+### Deployment Steps
+
+1. Created a new Hugging Face Space.
+2. Uploaded the required project files.
+3. Configured the README file.
+4. Verified that the Space was created successfully.
+
+---
+
+## Running the Project Locally
+
+Install the required packages
+
+```bash
 pip install -r requirements.txt
+```
 
-start the ollama using this command:
+Start Ollama
 
+```bash
 ollama serve
+```
 
-to run the application use this command:
+Run the application
 
-python -m streamlit run app.py
+```bash
+streamlit run app.py
+```
 
+---
 
-"Hugging Face has updated its Space creation options. At the time of submission, Streamlit Spaces were not available in the free tier of my account. Therefore, the application was successfully deployed on Streamlit Community Cloud, while Hugging Face deployment could not be completed due to platform limitations"
+## Cloud Deployment Note
 
-I know how to deploy in hugging face and in the future I can pay the bill and deploy the application
+The original application was developed using **Ollama** with the **CodeLlama** model for local execution.
 
-https://codellama-with-ollama.streamlit.app/   
+Since Streamlit Community Cloud cannot run a local Ollama server, the deployed version was updated to use the **Groq API** with the **Llama 3.3 70B Versatile** model.
 
-the above link address is came after the deployment on the streamlit. I used the Groq API creddentials and stored in the Streamlit secrets. 
-The original application was built using Ollama and CodeLlama for local execution
+The application features remain the same after deployment.
 
-For cloud deployment (Streamlit Community Cloud), the application was adapted to use the Groq API with the Llama 3.3 70B Versatile model as this change was necessary because Streamlit Cloud does not support running a local Ollama server
-
-The application logic and features remain the same:
 - Generate Code
 - Explain Code
 - Debug Code
 - Optimize Code
 
-GitHub repo link: https://github.com/DEVANAND-JAYARAMAN/GenAI-Asssignements-TuteDude/
 
-screenshot is attached
+## Deployment Observation
 
-I attempted to complete the Hugging Face Spaces deployment. However, on my account the Gradio and Docker SDKs require a PRO subscription, and only Static Spaces are available for free
+I successfully deployed the application on Streamlit Community Cloud and verified that all features were working correctly.
+
+I also created a Hugging Face Space and uploaded the project files. This assignment helped me understand the deployment workflow, GitHub integration, secret management, and the differences between local and cloud-based LLM deployment

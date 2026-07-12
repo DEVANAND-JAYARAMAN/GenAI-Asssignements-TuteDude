@@ -1,3 +1,5 @@
-gradio
-groq
+streamlit
+langchain
+langchain-core
+langchain-groq
 python-dotenv
