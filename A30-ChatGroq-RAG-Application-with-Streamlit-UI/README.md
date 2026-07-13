@@ -89,3 +89,6 @@ Ask a follow-up question to verify conversation continuity.
 Test Case 3
 
 Ask an unrelated question to verify that the chatbot responds appropriately when the answer is not found in the uploaded document
+
+go to this website https://console.groq.com/keys and I already pasted the image for the proof of groq api key getting
+to create the new api key, go to that website and click the create new api key. and then give the token name and description and then make the api. dont share the api publically.
