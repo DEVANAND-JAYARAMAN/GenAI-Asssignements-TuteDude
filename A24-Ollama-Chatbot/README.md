@@ -48,6 +48,4 @@ NAME                       ID              SIZE      MODIFIED
 llama3.2:latest            a80c4f17acd5    2.0 GB    15 seconds ago
 nomic-embed-text:latest    0a109f422b47    274 MB    About an hour ago
 
-i created the api key in langchain and i put that in the env file and now im not including the env file to secure my api key
-
-please look at the assignment 17 as I submitted long hour ago and still not reviewed. but the other assignments are uploaded after that and it is instantly approved/rejected.
+I created the api key in langchain and i put that in the env file and now im not including the env file to secure my api key
