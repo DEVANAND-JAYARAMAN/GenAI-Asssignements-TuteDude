@@ -6,18 +6,16 @@ from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain_community.agent_toolkits.sql.base import create_sql_agent
 
-
 load_dotenv()
-
 # Connect to SQLite database
 db = SQLDatabase.from_uri("sqlite:///company.db")
 
-# Load Groq LLM
+# Loading the Groq LLM from the env variable
 llm = ChatGroq(model="llama-3.1-8b-instant",api_key=os.getenv("GROQ_API_KEY"))
-# Create toolkit
+# Createng the toolkit
 toolkit = SQLDatabaseToolkit(db=db,llm=llm)
 
-# Create SQL Agent
+# Creating theSQL Agent
 agent = create_sql_agent(llm=llm,toolkit=toolkit,verbose=True, agent_executor_kwargs={"handle_parsing_errors": True})
 print("SQL Agent Created Successfully!")
 
@@ -33,11 +31,9 @@ for q in questions:
     print("\nAnswer:")
     print(response["output"])
 
-
 #task 9 - giving the ambiguous querry
 response1 = agent.invoke({"input": "Show me sales"})
 print(response1["output"])
-
 response2 = agent.invoke({"input": "Who earns the most?"})
 print(response2["output"])
 
